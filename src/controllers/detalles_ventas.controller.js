@@ -12,7 +12,7 @@ export const obtenerDetallesVenta = async (req, res) => {
           dv.cantidad,
           dv.precio_unitario,
           p.nombre_producto,
-          p.descripcion_producto,
+          p.descripcion,
           (dv.cantidad * dv.precio_unitario) AS subtotal
         FROM Detalles_Ventas dv
         INNER JOIN Productos p ON dv.id_producto = p.id_producto
