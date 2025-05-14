@@ -20,7 +20,7 @@ export const obtenerProducto = async (req, res) => {
     
     if (result.length <= 0) {
       return res.status(404).json({
-        mensaje: 'Error al leer los datos. El ID ${req.params.id} del producto no fue encontrado.'
+        mensaje: `Error al leer los datos. El ID ${req.params.id} del producto no fue encontrado.`
       });
     }
     res.json(result[0]);
@@ -43,10 +43,10 @@ export const registrarProducto = async (req, res) => {
       imagen 
     } = req.body;
 
-    // Validación básica de campos requeridos
+    // Validación básica de campos requeridos
     if (!nombre_producto || !id_categoria || !precio_unitario || !stock) {
       return res.status(400).json({
-        mensaje: 'Faltan campos requeridos: nombre, categoría, precio o stock.'
+        mensaje: 'Faltan campos requeridos: nombre, categoría, precio o stock.'
       });
     }
 
@@ -73,3 +73,24 @@ export const registrarProducto = async (req, res) => {
     });
   }
 };
+
+export const eliminarProducto = async (req, res) => {
+  try {
+    const [result] = await pool.query('DELETE FROM Productos WHERE id_producto = ?', [req.params.id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        mensaje: `Error al eliminar el producto. El ID ${req.params.id} no fue encontrado.`
+      });
+    }
+
+    res.status(204).send(); // Respuesta sin contenido para indicar éxito
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: 'Ha ocurrido un error al eliminar el producto.',
+      error: error
+    });
+  }
+};
+
+

@@ -1,5 +1,5 @@
-import { pool } from '../db.js';
 
+import { pool } from '../db.js';
 
 // Controlador para obtener los detalles de una compra por id_compra
 export const obtenerDetallesCompra = async (req, res) => {
@@ -14,7 +14,7 @@ export const obtenerDetallesCompra = async (req, res) => {
         dc.cantidad,
         dc.precio_unitario,
         p.nombre_producto,
-        p.descripcion,
+        p.descripcion_producto,
         (dc.cantidad * dc.precio_unitario) AS subtotal
       FROM Detalles_Compras dc
       INNER JOIN Productos p ON dc.id_producto = p.id_producto

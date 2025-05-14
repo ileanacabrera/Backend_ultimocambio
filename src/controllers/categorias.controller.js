@@ -1,6 +1,6 @@
 import { pool } from '../db.js';
 
-// Obtener todos los categorias
+// Obtener todos los clientes
 export const obtenerCategorias= async (req, res) => {
   try {
     const [result] = await pool.query('SELECT * FROM Categorias');
@@ -13,13 +13,31 @@ export const obtenerCategorias= async (req, res) => {
   }
 };
 
+// Obtener un cliente por su ID
+export const obtenerCliente = async (req, res) => {
+  try {
+    const [result] = await pool.query('SELECT * FROM Clientes WHERE id_cliente = ?', [req.params.id]);
+    
+    if (result.length <= 0) {
+      return res.status(404).json({
+        mensaje: `Error al leer los datos. El ID ${req.params.id} del cliente no fue encontrado.`
+      });
+    }
+    res.json(result[0]);
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: 'Ha ocurrido un error al leer los datos del cliente.'
+    });
+  }
+};
+
 // Registrar una nueva categoría
 export const registrarCategoria = async (req, res) => {
   try {
     const { nombre_categoria, descripcion_categoria } = req.body;
 
     const [result] = await pool.query(
-      'INSERT INTO categorias (nombre_categoria, descripcion_categoria) VALUES (?, ?)',
+      'INSERT INTO Categorias (nombre_categoria, descripcion_categoria) VALUES (?, ?)',
       [nombre_categoria, descripcion_categoria]
     );
 
@@ -32,7 +50,25 @@ export const registrarCategoria = async (req, res) => {
   }
 };
 
-// Actualizar una categoría por su ID (parcial o completa)
+export const eliminarCategoria = async (req, res) => {
+  try {
+    const [result] = await pool.query('DELETE FROM Categorias WHERE id_categoria = ?', [req.params.id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        mensaje: `Error al eliminar la categoría. El ID ${req.params.id} no fue encontrado.`
+      });
+    }
+
+    res.status(204).send(); // Respuesta sin contenido para indicar éxito
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: 'Ha ocurrido un error al eliminar la categoría.',
+      error: error
+    });
+  }
+};
+
 export const actualizarCategoria = async (req, res) => {
   try {
     const { id } = req.params;
@@ -58,25 +94,3 @@ export const actualizarCategoria = async (req, res) => {
   }
 };
 
-
-// Eliminar una categoría por su ID
-export const eliminarCategoria = async (req, res) => {
-  try {
-    const [result] = await pool.query('DELETE FROM categorias WHERE id_categoria = ?', [req.params.id]);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        mensaje: `Error al eliminar la categoría. El ID ${req.params.id} no fue encontrado.`
-      });
-    }
-
-    res.status(204).send(); // Respuesta sin contenido para indicar éxito
-  } catch (error) {
-    console.error(error);  // Imprime el error en consola
-    return res.status(500).json({
-      mensaje: 'Ha ocurrido un error al eliminar la categoría.',
-      error: error.message  // Mensaje del error
-    });
-  }
-  
-  };
