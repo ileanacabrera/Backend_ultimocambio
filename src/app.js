@@ -9,12 +9,17 @@ import productos from './routes/productos.routes.js';
 import rutasDetallesVentas from './routes/detalles_ventas.routes.js';
 import rutasDetallesCompras from './routes/detallecompra.routes.js';
 import rutasCompras from './routes/compra.routes.js';
-import rutasEmpleados from './routes/empleado.router.js';
+
+import rutasEstadisticas from './routes/estadisticas.routes.js';
+
+
+
  
 const app = express();
 
 // Habilitar CORS para cualquier origen
 app.use(cors({
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type'],
 }));
@@ -29,11 +34,13 @@ app.use('/api', rutasProductos);
 app.use('/api', rutasCategorias);
 app.use('/api', rutasVenta);
 app.use('/api', productos);
-app.use('/api', empleados);
+
 app.use('/api', rutasDetallesVentas);
-app.use('/api', ontenerempleados);
+
 app.use('/api', rutasDetallesCompras);
 app.use('/api', rutasCompras);
+
+app.use('/api', rutasEstadisticas);
 
 
 // Manejo de rutas no encontradas
