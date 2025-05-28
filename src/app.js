@@ -5,12 +5,12 @@ import rutasUsuarios from './routes/usuarios.routes.js';
 import rutasProductos from './routes/productos.routes.js';
 import rutasCategorias from './routes/categoria.routes.js';
 import rutasVenta from './routes/venta.routes.js';
-import productos from './routes/productos.routes.js';
 import rutasDetallesVentas from './routes/detalles_ventas.routes.js';
 import rutasDetallesCompras from './routes/detallecompra.routes.js';
 import rutasCompras from './routes/compra.routes.js';
-
+import rutasempleados from './routes/empleados.routes.js';
 import rutasEstadisticas from './routes/estadisticas.routes.js';
+import rutasIA from './routes/ia.routes.js';
 
 
 
@@ -31,9 +31,11 @@ app.use(express.json());
 app.use('/api', rutasClientes);
 app.use('/api', rutasUsuarios);
 app.use('/api', rutasProductos);
+app.use('/api', rutasempleados);
 app.use('/api', rutasCategorias);
 app.use('/api', rutasVenta);
-app.use('/api', productos);
+app.use('/ia', rutasIA);
+
 
 app.use('/api', rutasDetallesVentas);
 
