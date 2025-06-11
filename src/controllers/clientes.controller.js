@@ -1,7 +1,7 @@
 import { pool } from '../db.js';
 
 // Obtener todos los clientes
-export const obtenerClientes= async (req, res) => {
+export const obtenerClientes = async (req, res) => {
   try {
     const [result] = await pool.query('SELECT * FROM Clientes');
     res.json(result);
@@ -16,17 +16,54 @@ export const obtenerClientes= async (req, res) => {
 // Obtener un cliente por su ID
 export const obtenerCliente = async (req, res) => {
   try {
-    const [result] = await pool.query('SELECT * FROM Clientes WHERE id_cliente = ?', [req.params.id]);
-    
-    if (result.length <= 0) {
+    const [result] = await pool.query(
+      'SELECT * FROM Clientes WHERE id_cliente = ?',
+      [req.params.id]
+    );
+
+    if (result.length === 0) {
       return res.status(404).json({
         mensaje: `Error al leer los datos. El ID ${req.params.id} del cliente no fue encontrado.`
       });
     }
+
     res.json(result[0]);
   } catch (error) {
     return res.status(500).json({
-      mensaje: 'Ha ocurrido un error al leer los datos del cliente.'
+      mensaje: 'Ha ocurrido un error al leer los datos del cliente.',
+      error: error
+    });
+  }
+};
+
+
+// Registrar un nuevo cliente
+export const registrarCliente = async (req, res) => {
+  const {
+    primer_nombre,
+    segundo_nombre,
+    primer_apellido,
+    segundo_apellido,
+    celular,
+    direccion,
+    cedula
+  } = req.body;
+
+  try {
+    const [resultado] = await pool.query(
+      `INSERT INTO Clientes (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, celular, direccion, cedula)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, celular, direccion, cedula]
+    );
+
+    res.status(201).json({
+      mensaje: 'Cliente registrado correctamente',
+      id_cliente: resultado.insertId
+    });
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: 'Ha ocurrido un error al registrar el cliente.',
+      error
     });
   }
 };
